@@ -31,9 +31,9 @@ class _HomePageState extends State<HomePage>{
         itemBuilder: (context, i) => _bandtile(bands[i])
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
         elevation: 1,
-        onPressed: (){}
+        onPressed: (){},
+        child: const Icon(Icons.add)
       ),
     );
   }
@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage>{
         title: Text( band.name! ),
         trailing: Text('${band.vote}', style: const TextStyle(fontSize: 20),),
         onTap: () {
-          print(band.name);
+          debugPrint(band.name);
           },
       );
   }
