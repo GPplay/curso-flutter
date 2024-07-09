@@ -1,8 +1,6 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api
 
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:practica_1/models/band.dart';
 
@@ -41,23 +39,37 @@ class _HomePageState extends State<HomePage>{
     );
   }
 
-  ListTile _bandtile(Band band) {
-    return ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Colors.blue[100],
-          child: Text(band.name?.substring(0, 2) ?? ""),
+  Widget _bandtile(Band band) {
+    return Dismissible(
+      key: Key(band.id!),
+      direction: DismissDirection.startToEnd,
+      onDismissed: (DismissDirection direction ){
+        debugPrint('Direcion: $direction');
+        //TODO: llamar el borrado en el server
+      },
+      background: Container(
+        padding: const EdgeInsets.only( left: 8.0),
+        color: Colors.red[300],
+        child: const Align (
+          alignment: Alignment.centerLeft,
+          child: Text('BORRAR HEROE', style: TextStyle(color: Colors.white),)
         ),
-        title: Text( band.name! ),
-        trailing: Text('${band.vote}', style: const TextStyle(fontSize: 20),),
-        onTap: () {
-          debugPrint(band.name);
-          },
-      );
+        ),
+      child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Colors.blue[100],
+            child: Text(band.name?.substring(0, 2) ?? ""),
+          ),
+          title: Text( band.name! ),
+          trailing: Text('${band.vote}', style: const TextStyle(fontSize: 20),),
+          onTap: () {
+            debugPrint(band.name);
+            },
+        ),
+    );
   }
   addNewBand(){
     final textController = TextEditingController();
-
-  if(Platform.isAndroid){
     //Android
     return showDialog(
       context: context,
@@ -79,29 +91,40 @@ class _HomePageState extends State<HomePage>{
         );
       }
     );
-  }
+  
+
+/*   //para iphone
   showCupertinoDialog(
     context: context, 
     builder: (_){
       return CupertinoAlertDialog(
-        title: Text('Nuevo heroe'),
+        title: const Text('Nuevo heroe'),
         content: CupertinoTextField(
           controller: textController,
         ),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: const Text('Añadir'),
+            onPressed: () => addBandToList(textController.text),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            child: const Text('cerrar'),
+            onPressed: () => Navigator.pop(context),
+          )
+        ],
       );
     }
-    );
+    ); */
   }
 
   void addBandToList(String name){
-
-    debugPrint(name);
-
     if(name.length > 1){
       //se agrega nueva banda
+      bands.add(Band(id: DateTime.now().toString(), name: name, vote: 0));
+      setState(() {});
     }
-
     Navigator.pop(context);
-
   }
 }
