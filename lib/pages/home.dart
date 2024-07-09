@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, avoid_print
 
 //import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +44,8 @@ class _HomePageState extends State<HomePage>{
       key: Key(band.id!),
       direction: DismissDirection.startToEnd,
       onDismissed: (DismissDirection direction ){
-        debugPrint('Direcion: $direction');
+        print('Direcion: $direction');
+        print('Heroe: ${band.id}');
         //TODO: llamar el borrado en el server
       },
       background: Container(
