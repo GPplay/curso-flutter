@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -24,15 +26,17 @@ class SocketService with ChangeNotifier {
     });
 
     _socket.onConnect((_) {
-      debugPrint('Connected');
       _serverStatus = ServerStatus.connected;
       notifyListeners();
     });
 
     _socket.onDisconnect((_) {
-      debugPrint('Disconnected');
       _serverStatus = ServerStatus.disconnected;
       notifyListeners();
+    });
+
+    _socket.on('nuevo-mensaje', (payload) {
+      print('nuevo mesaje: $payload');
     });
   }
 }

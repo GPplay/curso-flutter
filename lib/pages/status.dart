@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,9 +15,14 @@ class StatusPage extends StatelessWidget {
     
     final socketService = Provider.of<SocketService>(context);
 
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: Text('Hola Mundo'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('estado del servidor: ${ socketService.serverStatus }')
+          ],
+        ),
     ),
   );
   }

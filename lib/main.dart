@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         initialRoute: 'status',
         routes: {
           'home' :(_) => HomePage(),
-          'status': ( _ ) =>const StatusPage()
+          'status': ( _ ) => StatusPage()
         }
       ),
     );
