@@ -8,8 +8,6 @@ import 'package:practica_1/services/socket_service.dart';
 class StatusPage extends StatelessWidget {
   const StatusPage({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
     
@@ -23,6 +21,14 @@ class StatusPage extends StatelessWidget {
             Text('estado del servidor: ${ socketService.serverStatus }')
           ],
         ),
+    ),
+    floatingActionButton: FloatingActionButton(
+      child: const Icon( Icons.message ),
+      onPressed: (){
+        //tarea
+        //emitir:emitir-mensaje un mapa {nombre: flutter, mensaje: hola desde flutter};
+        socketService.socket.emit('emitir-mensaje', {'nombre' : 'flutter', 'mensaje' : 'hola desde flutter'});
+      }
     ),
   );
   }
