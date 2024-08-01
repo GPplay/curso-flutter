@@ -38,12 +38,5 @@ class SocketService with ChangeNotifier {
       _serverStatus = ServerStatus.disconnected;
       notifyListeners();
     });
-
-    // _socket.on('nuevo-mensaje', (payload) {
-    //   print('nuevo mesaje:');
-    //   print('nombre:' + payload['nombre']);
-    //   print('mensaje:' + payload['mensaje']);
-    //   print(payload.containsKey('mensaje-2') ? payload['mensaje-2']: 'no hay mensaje dos' ); //verificamos si hay un segundo mensaje
-    // });
   }
 }

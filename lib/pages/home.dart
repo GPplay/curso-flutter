@@ -18,12 +18,39 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>{
   List<Band> bands = [
-    Band(id: '1', name: 'batman', vote: 55),
-    Band(id: '1', name: 'superman', vote: 25),
-    Band(id: '1', name: 'iroman', vote: 5),
-    Band(id: '1', name: 'megaman', vote: 15),
+    // Band(id: '1', name: 'batman', vote: 55),
+    // Band(id: '1', name: 'superman', vote: 25),
+    // Band(id: '1', name: 'iroman', vote: 5),
+    // Band(id: '1', name: 'megaman', vote: 15),
   ];
 
+  @override
+  void initState() {
+
+    final socketService = Provider.of<SocketService>(context , listen: false);
+
+    socketService.socket.on('heroes-activos', (payload) {
+      bands = (payload as List).map( (banda) => Band.fromMap(banda) ).toList();
+
+      setState(() {});
+    });
+
+    super.initState();
+    
+  }
+
+  //cuando se vaya a destruir el HOME se llama el dispose
+
+  /*
+   *  @overrode
+   *  void dipose(){
+   *  final socketService = Provider.of<SocketService>(context , listen: false);
+   *  
+   *  socketService.socket.off('un evento');
+   * 
+   *  super.dispose();
+   * }
+   */
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +87,9 @@ class _HomePageState extends State<HomePage>{
   }
 
   Widget _bandtile(Band band) {
+
+    final socketService = Provider.of<SocketService>(context, listen: false);
+
     return Dismissible(
       key: Key(band.id!),
       direction: DismissDirection.startToEnd,
@@ -84,7 +114,7 @@ class _HomePageState extends State<HomePage>{
           title: Text( band.name! ),
           trailing: Text('${band.vote}', style: const TextStyle(fontSize: 20),),
           onTap: () {
-            debugPrint(band.name);
+            socketService.socket.emit('vote-heroe', {'id': band.id});
             },
         ),
     );
