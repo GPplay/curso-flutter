@@ -2,7 +2,13 @@
 
 //import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:practica_1/models/band.dart';
+import 'package:practica_1/services/socket_service.dart';
+
+
+
 
 
 class HomePage extends StatefulWidget {
@@ -21,11 +27,25 @@ class _HomePageState extends State<HomePage>{
 
   @override
   Widget build(BuildContext context) {
+
+    final socketService = Provider.of<SocketService>(context);
+    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Super Heroe', style: TextStyle(color: Colors.black87 ),),
         backgroundColor: Colors.white,
         elevation: 1,
+        actions: <Widget>[
+          Container(
+            margin: const EdgeInsets.only(right: 10),
+            //TODO hacer un ternario para que uno funcione si el servidor esta conectado o no
+            
+            child: ( socketService.serverStatus == ServerStatus.connected) ?
+            Icon( Icons.check_circle, color: Colors.green[400], ):
+            Icon( Icons.offline_bolt, color: Colors.red[400], )
+          )
+        ],
       ),
       body: ListView.builder(
         itemCount: bands.length,

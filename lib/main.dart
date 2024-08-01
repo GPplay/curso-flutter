@@ -19,10 +19,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Quien gana en un VS votacion',
-        initialRoute: 'status',
+        initialRoute: 'home',
         routes: {
           'home' :(_) => HomePage(),
-          'status': ( _ ) => StatusPage()
+          'status': ( _ ) => const StatusPage()
         }
       ),
     );
