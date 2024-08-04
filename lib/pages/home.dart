@@ -7,22 +7,13 @@ import 'package:provider/provider.dart';
 import 'package:practica_1/models/band.dart';
 import 'package:practica_1/services/socket_service.dart';
 
-
-
-
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage>{
-  List<Band> bands = [
-    // Band(id: '1', name: 'batman', vote: 55),
-    // Band(id: '1', name: 'superman', vote: 25),
-    // Band(id: '1', name: 'iroman', vote: 5),
-    // Band(id: '1', name: 'megaman', vote: 15),
-  ];
+  List<Band> bands = [];
 
   @override
   void initState() {
@@ -30,15 +21,19 @@ class _HomePageState extends State<HomePage>{
     final socketService = Provider.of<SocketService>(context , listen: false);
 
     socketService.socket.on('heroes-activos', (payload) {
-      bands = (payload as List).map( (banda) => Band.fromMap(banda) ).toList();
-
-      setState(() {});
+      _handelActiveBands(payload);
     });
 
     super.initState();
     
   }
 
+
+_handelActiveBands( dynamic payload ){
+        bands = (payload as List).map( (banda) => Band.fromMap(banda) ).toList();
+
+      setState(() {});
+}
   //cuando se vaya a destruir el HOME se llama el dispose
 
   /*
@@ -93,11 +88,7 @@ class _HomePageState extends State<HomePage>{
     return Dismissible(
       key: Key(band.id!),
       direction: DismissDirection.startToEnd,
-      onDismissed: (DismissDirection direction ){
-        print('Direcion: $direction');
-        print('Heroe: ${band.id}');
-        //TODO: llamar el borrado en el server
-      },
+      onDismissed: ( _ )=>socketService.socket.emit('delete-heroe', {'id' : band.id}), //TODO: llamar el borrado en el server (hecho)
       background: Container(
         padding: const EdgeInsets.only( left: 8.0),
         color: Colors.red[300],
@@ -171,10 +162,11 @@ class _HomePageState extends State<HomePage>{
   }
 
   void addBandToList(String name){
+    final socketService = Provider.of<SocketService>(context, listen: false);
     if(name.length > 1){
       //se agrega nueva banda
-      bands.add(Band(id: DateTime.now().toString(), name: name, vote: 0));
-      setState(() {});
+      //emitir "add-heroe" {"name" : nombre}
+      socketService.socket.emit('add-heroe', {'name' : name});
     }
     Navigator.pop(context);
   }

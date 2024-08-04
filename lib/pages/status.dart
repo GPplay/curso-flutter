@@ -21,8 +21,8 @@ class StatusPage extends StatelessWidget {
             Text('estado del servidor: ${ socketService.serverStatus }')
           ],
         ),
-    ),
-    floatingActionButton: FloatingActionButton(
+      ),
+      floatingActionButton: FloatingActionButton(
       child: const Icon( Icons.message ),
       onPressed: (){
         //tarea
