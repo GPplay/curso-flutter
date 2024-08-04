@@ -1,8 +1,10 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, avoid_print
-
 //import 'package:flutter/cupertino.dart';
+// ignore_for_file: avoid_function_literals_in_foreach_calls, use_key_in_widget_constructors, library_private_types_in_public_api
+
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:pie_chart/pie_chart.dart';
 
 import 'package:practica_1/models/band.dart';
 import 'package:practica_1/services/socket_service.dart';
@@ -30,9 +32,8 @@ class _HomePageState extends State<HomePage>{
 
 
 _handelActiveBands( dynamic payload ){
-        bands = (payload as List).map( (banda) => Band.fromMap(banda) ).toList();
-
-      setState(() {});
+  bands = (payload as List).map( (banda) => Band.fromMap(banda) ).toList();
+  setState(() {});
 }
   //cuando se vaya a destruir el HOME se llama el dispose
 
@@ -69,10 +70,17 @@ _handelActiveBands( dynamic payload ){
           )
         ],
       ),
-      body: ListView.builder(
-        itemCount: bands.length,
-        itemBuilder: (context, i) => _bandtile(bands[i])
-      ),
+      body: Column(children: <Widget>[
+
+        bands.isEmpty ? const Text('NO HAY HEROES INSCRITO') : _showGraph(),
+        
+        Expanded(
+          child: ListView.builder(
+            itemCount: bands.length,
+            itemBuilder: (context, i) => _bandtile(bands[i])
+          ),
+        )
+      ]),
       floatingActionButton: FloatingActionButton(
         elevation: 1,
         onPressed: addNewBand,
@@ -104,10 +112,7 @@ _handelActiveBands( dynamic payload ){
           ),
           title: Text( band.name! ),
           trailing: Text('${band.vote}', style: const TextStyle(fontSize: 20),),
-          onTap: () {
-            socketService.socket.emit('vote-heroe', {'id': band.id});
-            },
-        ),
+          onTap: () => socketService.socket.emit('vote-heroe', {'id': band.id})),
     );
   }
   addNewBand(){
@@ -115,8 +120,7 @@ _handelActiveBands( dynamic payload ){
     //Android
     return showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
+      builder: ( _ ) => AlertDialog(
           title: const Text('Nuevo super herore:'),
           content: TextField(
             controller: textController,
@@ -130,8 +134,7 @@ _handelActiveBands( dynamic payload ){
                 onPressed: () => addBandToList(textController.text)
               )
             ],
-        );
-      }
+        )
     );
   
 
@@ -169,5 +172,23 @@ _handelActiveBands( dynamic payload ){
       socketService.socket.emit('add-heroe', {'name' : name});
     }
     Navigator.pop(context);
+  }
+
+//mostrar grafica
+  Widget _showGraph(){
+    Map<String, double> dataMap = {};
+
+    bands.forEach((band) {
+      dataMap[band.name ?? ''] = (band.vote ?? 0).toDouble();
+    });
+    
+    return Container(
+      padding: const EdgeInsets.only(top: 10),
+      width: double.infinity,
+      height: 200,
+      child: PieChart(dataMap: dataMap,
+      chartType: ChartType.ring,
+      )
+    );
   }
 }
