@@ -24,7 +24,7 @@ class SocketService with ChangeNotifier {
 
 
   void _initConfig() {
-    _socket = IO.io('http://localhost:3000', {
+    _socket = IO.io('https://flutter-socket-server-ubqm.onrender.com/', {
       'transports': ['websocket'],
       'autoConnect': true,
     });
